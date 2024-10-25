@@ -35,6 +35,7 @@ export function process(
       ...options.transformerConfig,
       sourceMapOptions: {compiledFilename: filename},
       filePath: filename,
+      importReplacement: (a, b, c) => [false, ""],
     });
     const mapBase64 = Buffer.from(JSON.stringify(sourceMap)).toString("base64");
     // Split the source map comment across two strings so that tools like

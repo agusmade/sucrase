@@ -1,5 +1,7 @@
 import {createCheckers} from "ts-interface-checker";
 
+import {type ImportInfo} from "./CJSImportProcessor";
+import type CJSImportProcessor from "./CJSImportProcessor";
 import OptionsGenTypes from "./Options-gen-types";
 
 const {Options: OptionsChecker} = createCheckers(OptionsGenTypes);
@@ -13,6 +15,12 @@ export interface SourceMapOptions {
    */
   compiledFilename: string;
 }
+
+export type ImportReplacementFunction = (
+  path: string,
+  importInfo: ImportInfo,
+  processor: CJSImportProcessor,
+) => [boolean, string];
 
 export interface Options {
   /**
@@ -94,6 +102,7 @@ export interface Options {
    * File path to use in error messages, React display names, and source maps.
    */
   filePath?: string;
+  importReplacement?: ImportReplacementFunction;
 }
 
 export function validateOptions(options: Options): void {

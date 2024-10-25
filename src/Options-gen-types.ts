@@ -17,6 +17,17 @@ export const SourceMapOptions = t.iface([], {
   compiledFilename: "string",
 });
 
+export const CJSImportProcessor = t.iface([], {});
+
+export const ImportInfo = t.iface([], {});
+
+export const ImportReplacementFunction = t.func(
+  t.array(t.union("boolean", "string")),
+  t.param("path", "string"),
+  t.param("importInfo", "ImportInfo"),
+  t.param("processor", "CJSImportProcessor"),
+);
+
 export const Options = t.iface([], {
   transforms: t.array("Transform"),
   disableESTransforms: t.opt("boolean"),
@@ -32,11 +43,15 @@ export const Options = t.iface([], {
   enableLegacyBabel5ModuleInterop: t.opt("boolean"),
   sourceMapOptions: t.opt("SourceMapOptions"),
   filePath: t.opt("string"),
+  importReplacement: t.opt("ImportReplacementFunction"),
 });
 
 const exportedTypeSuite: t.ITypeSuite = {
   Transform,
   SourceMapOptions,
   Options,
+  ImportReplacementFunction,
+  ImportInfo,
+  CJSImportProcessor,
 };
 export default exportedTypeSuite;

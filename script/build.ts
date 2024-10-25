@@ -1,5 +1,8 @@
 #!./node_modules/.bin/sucrase-node
 /* eslint-disable no-console */
+import fs from "fs";
+import path from "path";
+
 import mergeDirectoryContents from "./mergeDirectoryContents";
 import run from "./run";
 
@@ -23,11 +26,29 @@ async function main(): Promise<void> {
   ];
   if (fast) {
     await Promise.all(promiseFactories.map((f) => f()));
+    createPack();
   } else {
     for (const f of promiseFactories) {
       await f();
     }
+    createPack();
   }
+}
+
+function createPack(): void {
+  let pack = JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json"), "utf-8"));
+
+  pack = {...pack, name: "am-sucrase", main: "index.js", module: "esm/index.js"};
+  delete pack.types;
+  delete pack.bin;
+  delete pack.scripts;
+  delete pack.devDependencies;
+
+  fs.writeFileSync(
+    path.join(__dirname, "../dist-self-build/package.json"),
+    JSON.stringify(pack, null, 2),
+    "utf-8",
+  );
 }
 
 async function buildBenchmark(): Promise<void> {

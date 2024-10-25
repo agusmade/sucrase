@@ -13,7 +13,7 @@ interface NamedImport {
   localName: string;
 }
 
-interface ImportInfo {
+export interface ImportInfo {
   defaultNames: Array<string>;
   wildcardNames: Array<string>;
   namedImports: Array<NamedImport>;
@@ -100,6 +100,7 @@ export default class CJSImportProcessor {
   }
 
   private generateImportReplacements(): void {
+    // eslint-disable-next-line prefer-const
     for (const [path, importInfo] of this.importInfoByPath.entries()) {
       const {
         defaultNames,
@@ -110,6 +111,12 @@ export default class CJSImportProcessor {
         hasStarExport,
       } = importInfo;
 
+      let rPath = path;
+      if (this.options.importReplacement) {
+        const [cont, pth] = this.options.importReplacement(path, importInfo, this);
+        if (pth) rPath = pth;
+        if (cont) continue;
+      }
       if (
         defaultNames.length === 0 &&
         wildcardNames.length === 0 &&
@@ -119,7 +126,7 @@ export default class CJSImportProcessor {
         !hasStarExport
       ) {
         // Import is never used, so don't even assign a name.
-        this.importsToReplace.set(path, `require('${path}');`);
+        this.importsToReplace.set(path, `require('${rPath}');`);
         continue;
       }
 
@@ -131,7 +138,7 @@ export default class CJSImportProcessor {
         secondaryImportName =
           wildcardNames.length > 0 ? wildcardNames[0] : this.getFreeIdentifierForPath(path);
       }
-      let requireCode = `var ${primaryImportName} = require('${path}');`;
+      let requireCode = `var ${primaryImportName} = require('${rPath}');`;
       if (wildcardNames.length > 0) {
         for (const wildcardName of wildcardNames) {
           const moduleExpr = this.enableLegacyTypeScriptModuleInterop

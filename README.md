@@ -1,4 +1,4 @@
-# Sucrase
+# Sucrase - Fork with `importReplacement` Option
 
 [![Build Status](https://github.com/alangpierce/sucrase/workflows/All%20tests/badge.svg)](https://github.com/alangpierce/sucrase/actions)
 [![npm version](https://img.shields.io/npm/v/sucrase.svg)](https://www.npmjs.com/package/sucrase)
@@ -208,8 +208,23 @@ For any advanced use cases, Sucrase can be called from JS directly:
 
 ```js
 import {transform} from "sucrase";
-const compiledCode = transform(code, {transforms: ["typescript", "imports"]}).code;
+const compiledCode = transform(code, {
+  transforms: ["typescript", "imports"],
+  jsxRuntime: 'classic',
+  production: true,
+  importReplacement: (pth, importInfo, processor) => {
+    const rpl = collectDependencies(pth, root, path.dirname(filePath), dependencies);
+      if (pth.match(/\.css/)) {
+        processor.importsToReplace.set(pth, '');
+        return [true, ''];
+      }
+      return [false, rpl];
+  },
+}).code;
 ```
+
+The optional `importReplacement` callback allows custom manipulation of each import path 
+by providing access to the `path`, `importInfo`, and `processor` arguments for enhanced control.
 
 ## What Sucrase is not
 
