@@ -1,0 +1,37 @@
+{
+  "name": "am-sucrase",
+  "version": "3.35.0",
+  "description": "Super-fast alternative to Babel for when you can target modern JS runtimes",
+  "author": "Alan Pierce <alangpierce@gmail.com>",
+  "license": "MIT",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alangpierce/sucrase.git"
+  },
+  "keywords": [
+    "babel",
+    "jsx",
+    "typescript",
+    "flow"
+  ],
+  "bugs": {
+    "url": "https://github.com/alangpierce/sucrase/issues"
+  },
+  "dependencies": {
+    "@jridgewell/gen-mapping": "^0.3.2",
+    "commander": "^4.0.0",
+    "glob": "^10.3.10",
+    "lines-and-columns": "^1.1.6",
+    "mz": "^2.7.0",
+    "pirates": "^4.0.1",
+    "ts-interface-checker": "^0.1.9"
+  },
+  "engines": {
+    "node": ">=16 || 14 >=14.17"
+  },
+  "resolutions": {
+    "**/eshost/socket.io": "4.7.0"
+  }
+}

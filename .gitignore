@@ -1,7 +1,7 @@
 .idea
 node_modules
 dist
-dist-self-build
+# dist-self-build
 dist-types
 example-runner/example-repos
 integration-test/test-cases/**/dist-actual
